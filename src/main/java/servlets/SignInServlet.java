@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import accounts.AccountService;
-import accounts.UserProfile;
+import dbService.dataSets.UserDataSet;
 
-public class SingInServlet extends HttpServlet {
+public class SignInServlet extends HttpServlet {
 	private final AccountService accountService;
 
-	public SingInServlet(AccountService accountService) {
+	public SignInServlet(AccountService accountService) {
 		this.accountService = accountService;
 	}
 
@@ -21,10 +21,10 @@ public class SingInServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String login = req.getParameter("login");
 		String password = req.getParameter("password");
-		UserProfile user = accountService.getUserByLogin(login);
+		UserDataSet user = accountService.getUserByLogin(login);
 		if (user != null && user.getPassword().equals(password)) {
 			resp.setStatus(HttpServletResponse.SC_OK);
-			resp.getWriter().println("Authorized: " + login);
+			resp.getWriter().println("Authorized");
 		} else {
 			resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			resp.getWriter().println("Unauthorized");

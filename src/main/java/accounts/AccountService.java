@@ -2,43 +2,41 @@ package accounts;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import dbService.DBException;
+import dbService.DBService;
+import dbService.dataSets.UserDataSet;
 
 /**
- * The class contains information about users which logged and about their sessinId
+ * The class contains information about users which logged
  * 
  * @author Alexey Kopylov
  *
  */
 public class AccountService {
-	private Map<String, UserProfile> loginToProfile;
-	private Map<String, UserProfile> sessionIdToProfile;
+	DBService dbService;
 	
 	public AccountService() {
-		this.loginToProfile = new ConcurrentHashMap<>();
-		this.sessionIdToProfile = new ConcurrentHashMap<>();
+		this.dbService = new DBService();
 	}
 	
-	public void addNewUser(UserProfile user) {
-		loginToProfile.put(user.getName(), user);
+	public void addNewUser(String login, String password) {
+		try {
+			dbService.addUser(login, password);
+		} catch (DBException e) {
+			System.out.println("Cann't add user");
+			e.printStackTrace();
+		}
 	}
 	
-	public void addSession(String sessionId, UserProfile user) {
-		sessionIdToProfile.put(sessionId, user);
-	}
-	
-	public UserProfile getUserByLogin(String login) {
-		return loginToProfile.get(login);
-	}
-	
-	public UserProfile getUserBySession(String sessionId) {
-		return sessionIdToProfile.get(sessionId);
-	}
-	
-	public void delUser(String login) {
-		loginToProfile.remove(login);
-	}
-	
-	public void delSesion(String sessionId) {
-		sessionIdToProfile.remove(sessionId);
+	public UserDataSet getUserByLogin(String login) {
+		try {
+			return dbService.getUser(login);
+		} catch (DBException e) {
+			System.out.println("Cann't get user by Login");
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

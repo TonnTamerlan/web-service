@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import accounts.AccountService;
-import accounts.UserProfile;
+import dbService.dataSets.UserDataSet;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class SignUpServlet extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		accountService.addNewUser(new UserProfile(req.getParameter("login"), req.getParameter("password"), ""));
+		accountService.addNewUser(req.getParameter("login"), req.getParameter("password"));
 		resp.setStatus(HttpServletResponse.SC_OK);
 	}
 }	
